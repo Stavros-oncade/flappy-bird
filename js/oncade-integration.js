@@ -96,7 +96,7 @@ async function purchaseItem(itemId) {
   try {
     const purchaseUrl = await oncadeSDK.getPurchaseURL({
       itemId,
-      redirectUrl: window.location.href + '/success'
+      redirectUrl: window.location.href
     });
     
     if (purchaseUrl) {
