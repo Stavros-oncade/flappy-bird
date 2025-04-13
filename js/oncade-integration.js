@@ -96,7 +96,7 @@ async function purchaseItem(itemId) {
   try {
     const purchaseUrl = await oncadeSDK.getPurchaseURL({
       itemId,
-      redirectUrl: window.location.origin + '/success'
+      redirectUrl: window.location.href + '/success'
     });
     
     if (purchaseUrl) {
@@ -146,7 +146,7 @@ async function getTipURL() {
     }
         // Get the tip URL from Oncade
     const tipUrl = await oncadeSDK.getTipURL({
-      redirectUrl: window.location.origin + '/post-tip.html'
+      redirectUrl: window.location.href + '/post-tip.html'
     });
     
     console.log('Tip URL obtained successfully');
