@@ -15,7 +15,7 @@ jobs:
       - name: Generate config
         run: |
           mkdir -p js
-          echo "const config = { oncade: { apiKey: '${{ secrets.ONCADE_API_KEY }}', gameId: '${{ secrets.ONCADE_GAME_ID }}' } };" > js/config.js
+          echo "const config = { oncade: { apiKey: '${{ vars.ONCADE_API_KEY }}', gameId: '${{ vars.ONCADE_GAME_ID }}' } };" > js/config.js
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
