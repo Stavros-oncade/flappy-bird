@@ -386,11 +386,17 @@ function create() {
 
     prepareGame(this)
 
-    gameOverBanner = this.add.image(assets.scene.width, 206, assets.scene.gameOver)
+    gameOverBanner = this.add.image(assets.scene.width, 200, assets.scene.gameOver)
     gameOverBanner.setDepth(20)
     gameOverBanner.visible = false
 
-    restartButton = this.add.image(assets.scene.width, 300, assets.scene.restart).setInteractive()
+    restartButton = this.add.text(assets.scene.width, 410, 'Play again', {
+        font: '24px Arial',
+        fill: '#ffffff',
+        backgroundColor: '#4a90e2',
+        padding: { x: 120, y: 10 }
+    }).setInteractive()
+    restartButton.setOrigin(0.5) // Center the text horizontally and vertically
     restartButton.on('pointerdown', restartGame)
     restartButton.setDepth(20)
     restartButton.visible = false
@@ -399,7 +405,7 @@ function create() {
     highScoreText = this.add.text(assets.scene.width, 340, 'Your Best: ' + highScore, {
         font: '20px Arial',
         fill: '#ffffff',
-        backgroundColor: '#000000',
+        backgroundColor: '#a0a0a0',
         padding: { x: 5, y: 5 }
     }).setInteractive()
     highScoreText.setOrigin(0.5) // Center the text horizontally and vertically
@@ -411,42 +417,30 @@ function create() {
         font: '24px Arial',
         fill: '#ffff00',
         backgroundColor: '#000000',
-        padding: { x: 5, y: 5 }
+        padding: { x: 120, y: 10 }
     }).setInteractive()
     newRecordText.setOrigin(0.5) // Center the text horizontally and vertically
     newRecordText.setDepth(20)
     newRecordText.visible = false
 
     // Create menu button as text instead of image - centered
-    menuButton = this.add.text(assets.scene.width, 380, 'Back to Menu', {
+    menuButton = this.add.text(assets.scene.width, 470, 'Quit to Main', {
         font: '24px Arial',
         fill: '#ffffff',
         backgroundColor: '#4a90e2',
-        padding: { x: 10, y: 5 }
+        padding: { x: 120, y: 10 }
     }).setInteractive()
     menuButton.setOrigin(0.5) // Center the text horizontally and vertically
     menuButton.on('pointerdown', returnToMenu)
     menuButton.setDepth(20)
     menuButton.visible = false
     
-    // Create store button as text instead of image - centered
-    storeButton = this.add.text(assets.scene.width, 460, 'Store', {
-        font: '24px Arial',
-        fill: '#ffffff',
-        backgroundColor: '#4a90e2',
-        padding: { x: 10, y: 5 }
-    }).setInteractive()
-    storeButton.setOrigin(0.5) // Center the text horizontally and vertically
-    storeButton.on('pointerdown', openGameStore)
-    storeButton.setDepth(20)
-    storeButton.visible = false
-    
     // Create main menu store button as text - centered
     mainMenuStoreButton = this.add.text(assets.scene.width, 460, 'Store', {
         font: '24px Arial',
         fill: '#ffffff',
         backgroundColor: '#4a90e2',
-        padding: { x: 10, y: 5 }
+        padding: { x: 120, y: 10 }
     }).setInteractive()
     mainMenuStoreButton.setOrigin(0.5) // Center the text horizontally and vertically
     mainMenuStoreButton.on('pointerdown', openGameStore)
@@ -458,7 +452,7 @@ function create() {
         font: '24px Arial',
         fill: '#ffffff',
         backgroundColor: '#4a90e2',
-        padding: { x: 10, y: 5 }
+        padding: { x: 80, y: 10 }
     }).setInteractive()
     mainMenuTipButton.setOrigin(0.5) // Center the text horizontally and vertically
     mainMenuTipButton.on('pointerdown', openTipPage)
@@ -704,7 +698,6 @@ function prepareGame(scene) {
     // Show main menu store button and hide game over store button
     if (mainMenuStoreButton) mainMenuStoreButton.visible = true
     if (mainMenuTipButton) mainMenuTipButton.visible = true
-    if (storeButton) storeButton.visible = false
 
     birdName = getRandomBird()
     player = scene.physics.add.sprite(60, 265, birdName)
@@ -775,7 +768,6 @@ function returnToMenu() {
     menuButton.visible = false
     highScoreText.visible = false
     newRecordText.visible = false
-    storeButton.visible = false
     
     // Close store if it's open
     if (typeof window.isStoreOpen === 'function' && window.isStoreOpen()) {
