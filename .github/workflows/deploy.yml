@@ -8,16 +8,13 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      ONCADE_API_KEY: ${{ vars.ONCADE_API_KEY }}
-      ONCADE_GAME_ID: ${{ vars.ONCADE_GAME_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Check if secret exists (safe)
         run: |
-          if [[ -z "$ONCADE_API_KEY" ]]; then
+          if [[ -z "${{ vars.ONCADE_API_KEY }}" ]]; then
             echo "Missing ONCADE_API_KEY"
             exit 1
           else
@@ -26,7 +23,7 @@ jobs:
 
       - name: Generate config
         run: |
-          echo "const config = { oncade: { apiKey: '$ONCADE_API_KEY', gameId: '$ONCADE_GAME_ID' } };" > js/config.js
+          echo "const config = { oncade: { apiKey: '${{ vars.ONCADE_API_KEY }}', gameId: '${{ vars.ONCADE_GAME_ID }}' } };" > js/config.js
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
