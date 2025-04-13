@@ -45,6 +45,9 @@ npm install
 ```
 npm run dev
 ``` 
+This will automatically:
+   - Generate the necessary config files from your `.env`
+   - Start the HTTP server
 
 ### Generate documentation
 1. Install [documentation.js](http://documentation.js.org/)
