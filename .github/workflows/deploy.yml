@@ -12,6 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Check if secret exists (safe)
+        run: |
+          if [[ -z "${{ secrets.ONCADE_API_KEY }}" ]]; then
+            echo "Missing ONCADE_API_KEY"
+          else
+            echo "ONCADE_API_KEY is present"
+          fi
+
       - name: Generate config
         run: |
           echo "const config = { oncade: { apiKey: '${{ vars.ONCADE_API_KEY }}', gameId: '${{ vars.ONCADE_GAME_ID }}' } };" > js/config.js
