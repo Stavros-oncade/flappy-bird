@@ -424,7 +424,7 @@ function create() {
     newRecordText.visible = false
 
     // Create menu button as text instead of image - centered
-    menuButton = this.add.text(assets.scene.width, 470, 'Quit to Main', {
+    menuButton = this.add.text(assets.scene.width, 470, 'Quit to main', {
         font: '24px Arial',
         fill: '#ffffff',
         backgroundColor: '#4a90e2',
@@ -448,7 +448,7 @@ function create() {
     mainMenuStoreButton.visible = true // Visible by default for main menu
     
     // Create main menu tip button as text - centered
-    mainMenuTipButton = this.add.text(assets.scene.width, 400, 'Tip Developer', {
+    mainMenuTipButton = this.add.text(assets.scene.width, 400, 'Tip developer', {
         font: '24px Arial',
         fill: '#ffffff',
         backgroundColor: '#4a90e2',

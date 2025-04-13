@@ -5,7 +5,7 @@
 
 const config = {
     oncade: {
-        apiKey: 'api_test_d350f7a936ea3ead683c0d9132a2b18705efc6c953561e6ecf99b37076be48cf',
-        gameId: 'my-first-game-fkaba'
+        apiKey: 'api_live_39d9a12c3c4b2a8623b172f1b29221e5ee2089ba9341e3ebf675604f995592bc',
+        gameId: 'flappy-6uxda'
     }
 };
