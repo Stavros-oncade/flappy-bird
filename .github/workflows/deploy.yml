@@ -8,17 +8,18 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      ONCADE_API_KEY: ${{ vars.ONCADE_API_KEY }}
+      ONCADE_GAME_ID: ${{ vars.ONCADE_GAME_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        env:
-          ONCADE_API_KEY: ${{ vars.ONCADE_API_KEY }}
-          ONCADE_GAME_ID: ${{ vars.ONCADE_GAME_ID }}
 
       - name: Check if secret exists (safe)
         run: |
           if [[ -z "$ONCADE_API_KEY" ]]; then
             echo "Missing ONCADE_API_KEY"
+            exit 1
           else
             echo "ONCADE_API_KEY is present"
           fi
