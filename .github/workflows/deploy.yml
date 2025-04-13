@@ -11,10 +11,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        env:
+          ONCADE_API_KEY: ${{ vars.ONCADE_API_KEY }}
+          ONCADE_GAME_ID: ${{ vars.ONCADE_GAME_ID }}
 
       - name: Check if secret exists (safe)
         run: |
-          if [[ -z "${{ secrets.ONCADE_API_KEY }}" ]]; then
+          if [[ -z "$ONCADE_API_KEY" ]]; then
             echo "Missing ONCADE_API_KEY"
           else
             echo "ONCADE_API_KEY is present"
