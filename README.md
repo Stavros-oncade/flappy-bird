@@ -1,5 +1,5 @@
 # Flappy Bird ![Flappy Bird](img/favicon.png) 
-A Flappy Bird game in [Phaser 3](https://phaser.io/) with [Oncade](https://oncade.io) integration.
+A Flappy Bird game in [Phaser 3](https://phaser.io/) with [Oncade](https://dev.oncade.xyz) integration.
 
 [Check it live!](https://stavros-oncade.github.io/flappy-bird)
 
