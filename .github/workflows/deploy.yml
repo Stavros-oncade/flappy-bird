@@ -21,26 +21,21 @@ jobs:
             echo "ONCADE_API_KEY is present"
           fi
 
-      - name: List directory structure
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "Directory contents:"
-          ls -la
-          echo "Creating js directory if it doesn't exist..."
-          mkdir -p js
-
       - name: Generate config
         run: |
           echo "Generating config file..."
+          mkdir -p js
           echo "const config = { oncade: { apiKey: '${{ vars.ONCADE_API_KEY }}', gameId: '${{ vars.ONCADE_GAME_ID }}' } };" > js/config.js
           echo "Config file contents:"
           cat js/config.js
-          echo "Directory structure after config generation:"
-          ls -la js/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: .
-          branch: gh-pages 
+          branch: gh-pages
+          clean: true
+          clean-exclude: |
+            .git
+            .github
+            node_modules 
