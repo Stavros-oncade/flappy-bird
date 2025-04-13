@@ -1,0 +1,14 @@
+{
+  "name": "flappy-bird",
+  "version": "1.0.0",
+  "description": "Flappy Bird game built with Phaser 3",
+  "scripts": {
+    "start": "http-server -c-1",
+    "setup": "node scripts/setup-local.js",
+    "dev": "npm run setup && npm start"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "http-server": "^14.1.1"
+  }
+}
