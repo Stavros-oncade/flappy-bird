@@ -1,7 +1,7 @@
 # Flappy Bird ![Flappy Bird](img/favicon.png) 
-A Flappy Bird game in [Phaser 3](https://phaser.io/).
+A Flappy Bird game in [Phaser 3](https://phaser.io/) with [Oncade](https://oncade.io) integration.
 
-[Check it live!](https://igorrozani.github.io/flappy-bird)
+[Check it live!](https://stavros-oncade.github.io/flappy-bird)
 
 ## Table of Contents
 * [Game screenshots](#game-screenshots)
@@ -9,15 +9,14 @@ A Flappy Bird game in [Phaser 3](https://phaser.io/).
 * [How to](#how-to)
     * [Run it](#run-it)
     * [Generate documentation](#generate-documentation)
-* [Wiki](#wiki)
+* [Oncade Integration](#oncade-integration)
+* [Credential Management](#credential-management)
 * [License](#license)
-
 
 ## Game screenshots
 ![Main menu](img/print01.png)
 
 *Main menu*
-
 
 ![Playing](img/print02.png)
 
@@ -35,15 +34,16 @@ The assets used in this project came from the project [FlapPyBird](https://githu
 ### Run it
 1. Clone this repository or click Download ZIP in right panel and extract it 
 ```
-git clone https://github.com/IgorRozani/flappy-bird.git 
+git clone https://github.com/Stavros-oncade/flappy-bird.git 
 ```
-2. Install [Http-Server](https://www.npmjs.com/package/http-server)
+2. Install dependencies
 ```
-npm install http-server -g
+npm install
 ```
-3. Run the http-server from the repository's directory
+3. Create a `.env` file with your credentials (see Credential Management section)
+4. Run the development server
 ```
-http-server
+npm run dev
 ``` 
 
 ### Generate documentation
@@ -56,9 +56,40 @@ npm install -g documentation
 documentation build js/game.js -f md > docs/game.md
 ```
 
-## Wiki
-We have a wiki, [check it](https://github.com/IgorRozani/flappy-bird/wiki/Wiki).
+## Oncade Integration
+This version of Flappy Bird includes integration with the Oncade SDK, allowing for:
+- Score tracking and leaderboards
+- Achievement system
+- Social features
+- Cross-platform compatibility
+
+To use the Oncade features, make sure to:
+1. Include your Oncade API credentials
+2. Initialize the Oncade SDK in your game
+3. Use the provided integration methods for score submission and achievements
+
+## Credential Management
+This project uses a secure approach to manage API credentials:
+
+1. For local development:
+   - Create a `.env` file in the root directory with your credentials:
+     ```
+     ONCADE_API_KEY=your_api_key_here
+     ONCADE_GAME_ID=your_game_id_here
+     ```
+   - The `.env` file is excluded from git via `.gitignore`
+   - Run `npm run dev` to generate the config file from your `.env` and start the server
+
+2. For production deployment:
+   - The GitHub Actions workflow automatically generates the config file with your production credentials
+   - Add your Oncade API credentials as GitHub repository secrets:
+     - Go to Settings > Secrets and variables > Actions
+     - Add `ONCADE_API_KEY` and `ONCADE_GAME_ID` secrets
 
 ## License
 
 [MIT License](http://opensource.org/licenses/MIT)
+
+## Credits
+- Original game by [Igor Rozani](https://github.com/IgorRozani/flappy-bird)
+- Modified and enhanced with Oncade integration by [Stavros-oncade](https://github.com/Stavros-oncade)

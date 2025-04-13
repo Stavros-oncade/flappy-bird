@@ -2,16 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-128903927-1"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-128903927-1');
-    </script>
-
     <meta charset="UTF-8">
     <title>Flappy Bird</title>
 
@@ -40,7 +30,16 @@
     <link rel="manifest" href="/manifest.json">
 
     <link rel="stylesheet" href="css/site.css">
+    
+    <!-- Oncade SDK Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@oncade/sdk@0.1.11/dist/browser/oncade-sdk.min.js"></script>
+    
+    <!-- Game Scripts -->
     <script src="//cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.js" type="text/javascript"></script>
+    <script src="js/config.js" type="text/javascript"></script>
+    <script src="js/oncade-integration.js" type="text/javascript"></script>
+    <script src="js/store.js" type="text/javascript"></script>
     <script src="js/game.js" type="text/javascript"></script>
 </head>
 <body>

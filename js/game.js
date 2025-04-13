@@ -129,6 +129,41 @@ let gameOverBanner
  * @type {object}
  */
 let messageInitial
+/**
+ * Menu button component.
+ * @type {object}
+ */
+let menuButton
+/**
+ * Store button component.
+ * @type {object}
+ */
+let storeButton
+/**
+ * Main menu store button component.
+ * @type {object}
+ */
+let mainMenuStoreButton
+/**
+ * Main menu tip button component.
+ * @type {object}
+ */
+let mainMenuTipButton
+/**
+ * High score text component.
+ * @type {object}
+ */
+let highScoreText
+/**
+ * New record text component.
+ * @type {object}
+ */
+let newRecordText
+/**
+ * Current high score.
+ * @type {number}
+ */
+let highScore = 0
 // Bird
 /**
  * Player component.
@@ -250,6 +285,9 @@ function preload() {
  *   Create the game objects (images, groups, sprites and animations).
  */
 function create() {
+    // Load high score from local storage
+    loadHighScore();
+    
     backgroundDay = this.add.image(assets.scene.width, 256, assets.scene.background.day).setInteractive()
     backgroundDay.on('pointerdown', moveBird)
     backgroundNight = this.add.image(assets.scene.width, 256, assets.scene.background.night).setInteractive()
@@ -356,6 +394,76 @@ function create() {
     restartButton.on('pointerdown', restartGame)
     restartButton.setDepth(20)
     restartButton.visible = false
+
+    // Create high score text
+    highScoreText = this.add.text(assets.scene.width, 340, 'Your Best: ' + highScore, {
+        font: '20px Arial',
+        fill: '#ffffff',
+        backgroundColor: '#000000',
+        padding: { x: 5, y: 5 }
+    }).setInteractive()
+    highScoreText.setOrigin(0.5) // Center the text horizontally and vertically
+    highScoreText.setDepth(20)
+    highScoreText.visible = false
+    
+    // Create new record text
+    newRecordText = this.add.text(assets.scene.width, 260, `NEW RECORD!`, {
+        font: '24px Arial',
+        fill: '#ffff00',
+        backgroundColor: '#000000',
+        padding: { x: 5, y: 5 }
+    }).setInteractive()
+    newRecordText.setOrigin(0.5) // Center the text horizontally and vertically
+    newRecordText.setDepth(20)
+    newRecordText.visible = false
+
+    // Create menu button as text instead of image - centered
+    menuButton = this.add.text(assets.scene.width, 380, 'Back to Menu', {
+        font: '24px Arial',
+        fill: '#ffffff',
+        backgroundColor: '#4a90e2',
+        padding: { x: 10, y: 5 }
+    }).setInteractive()
+    menuButton.setOrigin(0.5) // Center the text horizontally and vertically
+    menuButton.on('pointerdown', returnToMenu)
+    menuButton.setDepth(20)
+    menuButton.visible = false
+    
+    // Create store button as text instead of image - centered
+    storeButton = this.add.text(assets.scene.width, 460, 'Store', {
+        font: '24px Arial',
+        fill: '#ffffff',
+        backgroundColor: '#4a90e2',
+        padding: { x: 10, y: 5 }
+    }).setInteractive()
+    storeButton.setOrigin(0.5) // Center the text horizontally and vertically
+    storeButton.on('pointerdown', openGameStore)
+    storeButton.setDepth(20)
+    storeButton.visible = false
+    
+    // Create main menu store button as text - centered
+    mainMenuStoreButton = this.add.text(assets.scene.width, 460, 'Store', {
+        font: '24px Arial',
+        fill: '#ffffff',
+        backgroundColor: '#4a90e2',
+        padding: { x: 10, y: 5 }
+    }).setInteractive()
+    mainMenuStoreButton.setOrigin(0.5) // Center the text horizontally and vertically
+    mainMenuStoreButton.on('pointerdown', openGameStore)
+    mainMenuStoreButton.setDepth(20)
+    mainMenuStoreButton.visible = true // Visible by default for main menu
+    
+    // Create main menu tip button as text - centered
+    mainMenuTipButton = this.add.text(assets.scene.width, 400, 'Tip Developer', {
+        font: '24px Arial',
+        fill: '#ffffff',
+        backgroundColor: '#4a90e2',
+        padding: { x: 10, y: 5 }
+    }).setInteractive()
+    mainMenuTipButton.setOrigin(0.5) // Center the text horizontally and vertically
+    mainMenuTipButton.on('pointerdown', openTipPage)
+    mainMenuTipButton.setDepth(20)
+    mainMenuTipButton.visible = true // Visible by default for main menu
 }
 
 /**
@@ -410,16 +518,37 @@ function hitBird(player) {
     player.anims.play(getAnimationBird(birdName).stop)
     ground.anims.play(assets.animation.ground.stop)
 
+    // Check if current score is a new high score
+    if (isNewHighScore(score)) {
+        saveHighScore(score);
+        newRecordText.setText(`NEW RECORD! ${score}`);
+        newRecordText.visible = true;
+    } else {
+        newRecordText.visible = false;
+    }
+    
+    // Update high score text
+    highScoreText.setText('High Score: ' + highScore);
+    highScoreText.visible = true;
+
     gameOverBanner.visible = true
     restartButton.visible = true
+    menuButton.visible = true
+    // Remove store button from game over screen
+    // storeButton.visible = true
+    
+    // Hide main menu store button when game is over
+    if (mainMenuStoreButton) mainMenuStoreButton.visible = false
 }
 
 /**
- *   Update the scoreboard.
- *   @param {object} _ - Game object that overlapped, in this case the bird (ignored).
- *   @param {object} gap - Game object that was overlapped, in this case the gap.
+ * Update the score when the bird passes through a gap.
+ * @param {object} player - Bird component.
+ * @param {object} gap - Gap component.
  */
 function updateScore(_, gap) {
+    if (!gameStarted || gameOver) return
+
     score++
     gap.destroy()
 
@@ -434,6 +563,11 @@ function updateScore(_, gap) {
     }
 
     updateScoreboard()
+
+    // Submit score to Oncade when it changes
+    if (typeof submitScore === 'function') {
+        submitScore(score);
+    }
 }
 
 /**
@@ -536,6 +670,16 @@ function restartGame() {
     player.destroy()
     gameOverBanner.visible = false
     restartButton.visible = false
+    menuButton.visible = false
+    highScoreText.visible = false
+    newRecordText.visible = false
+    // Remove store button from game over screen
+    // storeButton.visible = false
+    
+    // Close store if it's open
+    if (typeof window.isStoreOpen === 'function' && window.isStoreOpen()) {
+        window.closeStore(game);
+    }
 
     const gameScene = game.scene.scenes[0]
     prepareGame(gameScene)
@@ -556,6 +700,11 @@ function prepareGame(scene) {
     backgroundDay.visible = true
     backgroundNight.visible = false
     messageInitial.visible = true
+    
+    // Show main menu store button and hide game over store button
+    if (mainMenuStoreButton) mainMenuStoreButton.visible = true
+    if (mainMenuTipButton) mainMenuTipButton.visible = true
+    if (storeButton) storeButton.visible = false
 
     birdName = getRandomBird()
     player = scene.physics.add.sprite(60, 265, birdName)
@@ -576,11 +725,140 @@ function prepareGame(scene) {
  * @param {object} scene - Game scene.
  */
 function startGame(scene) {
+    // Clear any existing pipes or gaps
+    pipesGroup.clear(true, true)
+    gapsGroup.clear(true, true)
+    scoreboardGroup.clear(true, true)
+    
+    // Set game state
     gameStarted = true
+    gameOver = false
     messageInitial.visible = false
-
+    
+    // Hide main menu store button when game starts
+    if (mainMenuStoreButton) mainMenuStoreButton.visible = false
+    if (mainMenuTipButton) mainMenuTipButton.visible = false
+    
+    // Create initial score display
     const score0 = scoreboardGroup.create(assets.scene.width, 30, assets.scoreboard.number0)
     score0.setDepth(20)
-
+    
+    // Reset bird position and physics
+    if (player) {
+        player.setPosition(60, 265)
+        player.setVelocityY(0)
+        player.angle = 0
+        player.body.allowGravity = true
+    }
+    
+    // Create initial pipes
     makePipes(scene)
+}
+
+/**
+ * Return to the main menu.
+ */
+function returnToMenu() {
+    // Clear all game elements
+    pipesGroup.clear(true, true)
+    gapsGroup.clear(true, true)
+    scoreboardGroup.clear(true, true)
+    
+    // Destroy the player if it exists
+    if (player) {
+        player.destroy()
+    }
+    
+    // Hide game over elements
+    gameOverBanner.visible = false
+    restartButton.visible = false
+    menuButton.visible = false
+    highScoreText.visible = false
+    newRecordText.visible = false
+    storeButton.visible = false
+    
+    // Close store if it's open
+    if (typeof window.isStoreOpen === 'function' && window.isStoreOpen()) {
+        window.closeStore(game);
+    }
+    
+    // Reset game state
+    gameStarted = false
+    gameOver = false
+    
+    // Reset world state
+    const gameScene = game.scene.scenes[0]
+    gameScene.physics.pause()
+    
+    // Prepare the game for a fresh start
+    prepareGame(gameScene)
+    
+    // Resume physics
+    gameScene.physics.resume()
+}
+
+/**
+ * Open the Oncade store
+ */
+function openGameStore() {
+    if (typeof window.openStore === 'function') {
+        window.openStore(game);
+    }
+}
+
+/**
+ * Open the tip page
+ */
+function openTipPage() {
+    if (typeof window.getTipURL === 'function') {
+        window.getTipURL().then(tipUrl => {
+            if (tipUrl) {
+                window.location.href = tipUrl;
+            } else {
+                console.error('Failed to get tip URL');
+                // Show a message to the user that they need to be logged in
+                const tipErrorText = game.scene.scenes[0].add.text(assets.scene.width, 400, 'Please log in to tip', {
+                    font: '20px Arial',
+                    fill: '#ffffff',
+                    backgroundColor: '#ff0000',
+                    padding: { x: 10, y: 5 }
+                });
+                tipErrorText.setOrigin(0.5);
+                tipErrorText.setDepth(30);
+                
+                // Remove the error message after 3 seconds
+                game.scene.scenes[0].time.delayedCall(3000, () => {
+                    tipErrorText.destroy();
+                });
+            }
+        });
+    }
+}
+
+/**
+ * Load the high score from local storage.
+ */
+function loadHighScore() {
+    const savedHighScore = localStorage.getItem('flappyBirdHighScore');
+    if (savedHighScore !== null) {
+        highScore = parseInt(savedHighScore);
+    }
+}
+
+/**
+ * Save the high score to local storage.
+ * @param {number} newHighScore - The new high score to save.
+ */
+function saveHighScore(newHighScore) {
+    localStorage.setItem('flappyBirdHighScore', newHighScore);
+    highScore = newHighScore;
+}
+
+/**
+ * Check if the current score is a new high score.
+ * @param {number} currentScore - The current score to check.
+ * @return {boolean} - True if the current score is a new high score.
+ */
+function isNewHighScore(currentScore) {
+    return currentScore > highScore;
 }
